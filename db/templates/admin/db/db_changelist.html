@@ -1,0 +1,9 @@
+{% extends 'admin/change_list.html' %}
+
+{% block object-tools %}
+    <form action="send_mails/" method="POST">
+        {% csrf_token %}
+        <button type="submit" class='btn'>Send emails to faculties</button>
+    </form>
+    {{ block.super }}
+{% endblock %}
