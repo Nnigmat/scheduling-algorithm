@@ -20,10 +20,12 @@ class MailAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def send_mails(self, request):
-        t = Template('https://docs.google.com/forms/d/e/1FAIpQLScm7Akef32OptYwfi-D-Bg06TvYBxZgM-W-pArwwFR4JLZdYw/viewform?entry.592583197=$name&entry.966480905=a$surname&entry.2133507524=$email')
+        t = Template('https://docs.google.com/forms/d/e/1FAIpQLScm7Akef32OptYwfi-D-Bg06TvYBxZgM-W-pArwwFR4JLZdYw/viewform?entry.592583197=$name&entry.966480905=$surname')
 
         for faculty in Faculty.objects.all():
-            send_mail('Schedule creation', 'Hello!\nPlease fill the form for creating good schedule for you\n' + t.substitute(name=faculty.name, surname=faculty.surname, email=faculty.surname), settings.EMAIL_HOST_USER, [faculty.email], fail_silently=False)
+            send_mail('Schedule creation', 'Hello!\nPlease fill the form for creating good schedule for you\n' 
+                + t.substitute(name=faculty.name, surname=faculty.surname), settings.EMAIL_HOST_USER,
+                 [faculty.email], fail_silently=False)
         self.message_user(request, 'Emails was sent successfully!')
         return HttpResponseRedirect('../')
 
