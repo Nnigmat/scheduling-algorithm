@@ -27,6 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'innopolisschedule@gmail.com'
+EMAIL_HOST_PASSWORD = 'schedule_algorithm'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+FORM_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLScm7Akef32OptYwfi-D-Bg06TvYBxZgM-W-pArwwFR4JLZdYw/viewform?usp=sf_link'
+SPREADSHEET_LINK = 'https://docs.google.com/spreadsheets/d/1KHnbo9-tD8sARIzf7Iw0JSIfZ83IdLJ4seezwl4J7nA/edit?usp=forms_web_b#gid=1606771684'
 
 # Application definition
 
