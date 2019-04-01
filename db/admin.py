@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Faculty, Auditorium, AdditionalProperties, Course, Preferences
+from .models import Faculty, Auditorium, AdditionalProperties, Course, Preferences, Schedule
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMessage, send_mail
@@ -8,6 +8,7 @@ from django_version import settings
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from string import Template
+from .schedule import generate_schedule
 
 class MailAdmin(admin.ModelAdmin):
     change_list_template = 'admin/db/db_changelist.html'
@@ -47,15 +48,28 @@ class PreferencesAdmin(admin.ModelAdmin):
 
         records = wks.get_all_records()
         records.pop(0)
-        print(records)
         for r in records:
             for key, value in r.items():
                 print(key, value)
-            
-        
 
         return HttpResponseRedirect('../')
-       
+
+class ScheduleAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/db/db_schedule.html'
+ 
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('generate_schedule/', self.make_schedule)
+        ]
+        return custom_urls + urls
+
+    def make_schedule(self, request):
+        out = generate_schedule()
+        schedule = Schedule.objects.create(res=out)
+        return HttpResponseRedirect('../')
+
+      
 
 admin.site.site_header = 'Automatically generated scheduling algorithm'
 admin.site.register(Faculty, MailAdmin)
@@ -63,3 +77,4 @@ admin.site.register(Preferences, PreferencesAdmin)
 admin.site.register(Course)
 admin.site.register(Auditorium)
 admin.site.register(AdditionalProperties)
+admin.site.register(Schedule, ScheduleAdmin)

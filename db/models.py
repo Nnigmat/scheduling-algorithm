@@ -27,6 +27,9 @@ class AdditionalProperties(models.Model):
 class Preferences(models.Model):
     faculty = models.OneToOneField(Faculty, on_delete=models.CASCADE, primary_key=True)
 
+class Schedule(models.Model):
+    res = models.CharField(max_length=2048, blank=False)
+
 
 
 
