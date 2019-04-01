@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Faculty, Auditorium, AdditionalProperties, Course, Preferences, Schedule
+from .models import TA, Prof, Auditorium, AdditionalProperties, Course, Preferences, Schedule
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMessage, send_mail
@@ -23,10 +23,12 @@ class MailAdmin(admin.ModelAdmin):
     def send_mails(self, request):
         t = Template('https://docs.google.com/forms/d/e/1FAIpQLScm7Akef32OptYwfi-D-Bg06TvYBxZgM-W-pArwwFR4JLZdYw/viewform?entry.592583197=$name&entry.966480905=$surname')
 
-        for faculty in Faculty.objects.all():
+        faculty = TA.objects.all() + Prof.objects.all()
+
+        for f in faculty:
             send_mail('Schedule creation', 'Hello!\nPlease fill the form for creating good schedule for you\n' 
-                + t.substitute(name=faculty.name, surname=faculty.surname), settings.EMAIL_HOST_USER,
-                 [faculty.email], fail_silently=False)
+                + t.substitute(name=f.name, surname=f.surname), settings.EMAIL_HOST_USER,
+                 [f.email], fail_silently=False)
         self.message_user(request, 'Emails was sent successfully!')
         return HttpResponseRedirect('../')
 
@@ -72,7 +74,8 @@ class ScheduleAdmin(admin.ModelAdmin):
       
 
 admin.site.site_header = 'Automatically generated scheduling algorithm'
-admin.site.register(Faculty, MailAdmin)
+admin.site.register(Prof, MailAdmin)
+admin.site.register(TA, MailAdmin)
 admin.site.register(Preferences, PreferencesAdmin)
 admin.site.register(Course)
 admin.site.register(Auditorium)
