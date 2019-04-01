@@ -56,11 +56,11 @@ def generate_schedule():
         time_slots.append(TimeSlot(i, "18:55"))
 
     profs = []
-    for prof in Faculty.objects.filter(type='Professor'):
+    for prof in Prof.objects.all():
         profs.append(_Faculty(name=prof.name, type='Professor'))
 
     tas = []
-    for ta in Faculty.objects.filter(type'TA'):
+    for ta in TA.objects.all():
         tas.append(_Faculty(name=ta.name, type='TA'))
 
     courses = []
