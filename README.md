@@ -5,7 +5,7 @@ Run project
 ``` python3 manage.py runserver```
 
 
-To test application you can you credits: 
+To test application you can use these credits: 
 
 Login ```admin``` 
 
