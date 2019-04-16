@@ -1,5 +1,6 @@
 import random
-from .models import Faculty, Course, AdditionalProperties
+from .models import Faculty, Course, AdditionalProperties, TimeSlot, Auditorium, StudentGroup
+
 class _Course:
     def __init__(self, name, classes_num, profs, tas, year):
         self.name = name
@@ -45,63 +46,43 @@ class _TimeSlot:
 
 
 def generate_schedule():
+    week = {
+        'Mon':1,
+        'Tue':2,
+        'Wed':3,
+        'Thu':4,
+        'Fri':5,
+        'Sat':6,
+        'Sun':7
+    }
+
+
     time_slots = []
-    for i in range(0, 5):
-        time_slots.append(TimeSlot(i, "9:00"))
-        time_slots.append(TimeSlot(i, "10:35"))
-        time_slots.append(TimeSlot(i, "12:10"))
-        time_slots.append(TimeSlot(i, "14:10"))
-        time_slots.append(TimeSlot(i, "15:45"))
-        time_slots.append(TimeSlot(i, "17:20"))
-        time_slots.append(TimeSlot(i, "18:55"))
+    for slot in TimeSlot.objects.all():
+        time_slots.append(_TimeSlot(day=week[slot.day], slot.time_start))
 
     profs = []
-    for prof in Prof.objects.all():
-        profs.append(_Faculty(name=prof.name, type='Professor'))
+    for prof in Faculty.objects.filter(type='Prof'):
+        profs.append(_Faculty(name=prof.name, type='Prof'))
 
     tas = []
-    for ta in TA.objects.all():
+    for ta in Faculty.objects.filter(type='TA'):
         tas.append(_Faculty(name=ta.name, type='TA'))
 
     courses = []
     i = 0
     for course in Course.objects.all():
-        courses.append(_Course(name=course.name,  classes_num=course.classes_num, profs=[profs[i]], tas=[tas[i]], year=course.year))
+        courses.append(_Course(name=course.name, classes_num=course.classes_num, profs=Course.faculty.objects.filter(type='Prof'), tas=Course.faculty.objects.filter(type='TA') ,  year=course.year))
         i += 1
 
     groups = []
-    groups.append(StudentGroup(2, 1))
-    groups.append(StudentGroup(2, 2))
-    groups.append(StudentGroup(2, 3))
+    for gr in StudentGroup.objects.all():
+        groups.append(_StudentGroup(year=gr.year, num=gr.num))
 
     classes = []
-    classes.append(Class(course=courses[0], type="Lecture"))
-    classes.append(Class(course=courses[0], type="Lab", group=groups[0]))
-    classes.append(Class(course=courses[0], type="Lab", group=groups[1]))
-    classes.append(Class(course=courses[0], type="Lab", group=groups[2]))
-    classes.append(Class(course=courses[0], type="Lab", group=groups[0]))
-    classes.append(Class(course=courses[0], type="Lab", group=groups[1]))
-    classes.append(Class(course=courses[0], type="Lab", group=groups[2]))
-
-    classes.append(Class(course=courses[1], type="Lecture"))
-    classes.append(Class(course=courses[1], type="Tutorial"))
-    classes.append(Class(course=courses[1], type="Lab", group=groups[0]))
-    classes.append(Class(course=courses[1], type="Lab", group=groups[1]))
-    classes.append(Class(course=courses[1], type="Lab", group=groups[2]))
-
-    classes.append(Class(course=courses[2], type="Lecture"))
-    classes.append(Class(course=courses[2], type="Tutorial"))
-    classes.append(Class(course=courses[2], type="Lab", group=groups[0]))
-    classes.append(Class(course=courses[2], type="Lab", group=groups[1]))
-    classes.append(Class(course=courses[2], type="Lab", group=groups[2]))
-
-    classes.append(Class(course=courses[3], type="Lecture"))
-    classes.append(Class(course=courses[3], type="Tutorial"))
-    classes.append(Class(course=courses[3], type="Lab", group=groups[0]))
-    classes.append(Class(course=courses[3], type="Lab", group=groups[1]))
-    classes.append(Class(course=courses[3], type="Lab", group=groups[2]))
-
-
+    for cls in Class.objects.all():
+        classes.append(_Class(course=cls.course, type=cls.type, group=cls.group))
+   
     for i in range(0, len(courses)):
         for j in range(0,len(profs)):
             if profs[j].name in courses[i].profs:

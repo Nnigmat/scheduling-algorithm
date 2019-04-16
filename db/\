@@ -1,0 +1,49 @@
+from django.db import models
+from django.core.validators import validate_email, MaxValueValidator, MinValueValidator
+
+
+class Faculty(models.Model):
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
+    email = models.EmailField(verbose_name='E-mail', max_length=254, blank=False, unique=True, validators=[validate_email])
+
+
+class Course(models.Model):
+    name =  models.CharField(max_length=30)
+    classes = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
+    year = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    faculty = models.ManyToManyField(Faculty)
+
+
+class Class(models.Model):
+    CLASS_CHOICES = (
+        ('Lab', 'Lab'),
+        ('Lec', 'Lecture'),
+    )
+    type = models.CharField(max_length=3, choices=CLASS_CHOICES)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Faculty, on_delete=models.SET_NULL)
+    group = models.ForeignKey(StudentGroup, on_delete=models.CASCADE)
+    time = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
+
+
+class TimeSlot(models.Model):
+    DAY_CHOICES = (
+        ('Mon', 'Monday'),
+        ('Tue', 'Tuesday'),
+        ('Wed', 'Wednesday'),
+        ('Thu', 'Thursday'),
+        ('Fri', 'Friday'),
+        ('Sat', 'Saturday'),
+        ('Sun', 'Sunday'),
+    )
+    day = models.CharField(max_length=3, choices=DAY_CHOICES)
+    begin_time = models.CharField(max_length=5)
+
+
+class StudentGroup(models.Model):
+    year = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    num = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+
+
+

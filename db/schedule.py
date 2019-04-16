@@ -32,6 +32,7 @@ class Faculty(User):
         self.type = type
         self.name = name
 
+
 class StudentGroup(User):
     def __init__(self, year, num):
         super().__init__()
@@ -42,8 +43,6 @@ class TimeSlot:
     def __init__(self, day, time_start):
         self.day = day
         self.time_start = time_start
-
-
 
 def generate_schedule():
     time_slots = []

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import TA, Prof, Auditorium, AdditionalProperties, Course, Preferences, Schedule
+from .models import Faculty, Auditorium, AdditionalProperties, Course, Preferences, Schedule, TimeSlot, StudentGroup, Class
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMessage, send_mail
@@ -52,7 +52,8 @@ class PreferencesAdmin(admin.ModelAdmin):
         records.pop(0)
         for r in records:
             for key, value in r.items():
-                print(key, value)
+                if value != "":
+                    pass
 
         return HttpResponseRedirect('../')
 
@@ -74,10 +75,12 @@ class ScheduleAdmin(admin.ModelAdmin):
       
 
 admin.site.site_header = 'Automatically generated scheduling algorithm'
-admin.site.register(Prof, MailAdmin)
-admin.site.register(TA, MailAdmin)
+admin.site.register(Faculty)
 admin.site.register(Preferences, PreferencesAdmin)
 admin.site.register(Course)
 admin.site.register(Auditorium)
 admin.site.register(AdditionalProperties)
 admin.site.register(Schedule, ScheduleAdmin)
+admin.site.register(TimeSlot)
+admin.site.register(StudentGroup)
+admin.site.register(Class)

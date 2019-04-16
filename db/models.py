@@ -1,53 +1,73 @@
 from django.db import models
 from django.core.validators import validate_email, MaxValueValidator, MinValueValidator
 
+
 class Faculty(models.Model):
-    '''
-    ' Faculty model
-    '''
+    FACULTY_TYPE_CHOICES = (
+        ('Prof', 'Professor'),
+        ('TA', 'Teacher Assistant')
+    )
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
     email = models.EmailField(verbose_name='E-mail', max_length=254, blank=False, unique=True, validators=[validate_email])
-    name = models.CharField(verbose_name='Name', max_length=50)
-    surname = models.CharField(verbose_name='Surname', max_length=50)
+    type = models.CharField(max_length=4, choices=FACULTY_TYPE_CHOICES)
 
-class Prof(Faculty):
-    pass
+    def __str__(self):
+        return f'Faculty: {self.name} {self.surname}'
 
-class TA(Faculty):
-    pass
 
 class Course(models.Model):
-    '''
-    ' Course model
-    '''
-    name = models.CharField(verbose_name='Course', default='Course', max_length=50, unique=True, blank=False)
-    class_num = models.IntegerField(verbose_name='Number of classes', default=100, max_length=1000, null=False, editable=True)
-    year = models.IntegerField(default=1, max_length=10)
-    professors = models.ManyToManyField(Prof)
-    tas = models.ManyToManyField(TA)
+    name =  models.CharField(max_length=30)
+    classes = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
+    year = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    faculty = models.ManyToManyField(Faculty)
+
+    def __str__(self):
+        return f'Course: {self.name}'
+
+
+
+class AdditionalProperties(models.Model):
+    max_class_in_row = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    
+
+class StudentGroup(models.Model):
+    year = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    num = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+
+    def __str__(self):
+        return f'Student group: {self.year}-{self.num}'
+
+class TimeSlot(models.Model):
+    DAY_CHOICES = (
+        ('Mon', 'Monday'),
+        ('Tue', 'Tuesday'),
+        ('Wed', 'Wednesday'),
+        ('Thu', 'Thursday'),
+        ('Fri', 'Friday'),
+        ('Sat', 'Saturday'),
+        ('Sun', 'Sunday'),
+    )
+    day = models.CharField(max_length=3, choices=DAY_CHOICES)
+    begin_time = models.CharField(max_length=5)
+
 
 class Auditorium(models.Model):
     '''
     ' Auditorium model
     '''
-    capacity = models.IntegerField(verbose_name='Capacity', default=100, null=False, editable=True, 
-        validators=[MaxValueValidator(999), MinValueValidator(100)])
-    number = models.IntegerField(verbose_name='Auditorium number', max_length=1000, null=False,
-        unique=True, editable=True)
+    capacity = models.IntegerField(verbose_name='Capacity', default=100, null=False, editable=True, validators=[MaxValueValidator(999), MinValueValidator(100)])
+    number = models.IntegerField(verbose_name='Auditorium number', null=False, unique=True, editable=True, validators=[MaxValueValidator(999), MinValueValidator(100)])
 
-class StudentGroup(models.Model):
-    pass
+    def __str__(self):
+        return f'Auditorium: {self.number}'
 
-class AdditionalProperties(models.Model):
-    '''
-    ' AdditionalProperties model
-    '''
-    pass
-    
 class Preferences(models.Model):
     '''
     ' Preferendes model
     '''
     faculty = models.OneToOneField(Faculty, on_delete=models.CASCADE, primary_key=True)
+
 
 class Schedule(models.Model):
     '''
@@ -56,16 +76,13 @@ class Schedule(models.Model):
     res = models.CharField(max_length=2048, blank=False)
 
 
-
-
-
-
-
-
-
-
-
-
-
-    
-    # created = models.CharField(max_length=120, blank=False, null=False, editable=True)
+class Class(models.Model):
+    CLASS_CHOICES = (
+        ('Lab', 'Lab'),
+        ('Lec', 'Lecture'),
+    )
+    type = models.CharField(max_length=3, choices=CLASS_CHOICES)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    group = models.ForeignKey(StudentGroup, on_delete=models.CASCADE)
+    time = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, null=True, blank=True)
