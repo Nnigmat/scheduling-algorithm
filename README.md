@@ -1,15 +1,30 @@
 # scheduling-algorithm
 
-Run project
+
+## Installation
+
+The project uses python3. 
+To install requirement packages you can create virtual environment.
+
+```python3 -m venv venv ```
+
+Activate it.
+
+```source venv/bin/activate```
+
+Install packages from requirements.txt file.
+
+``` pip3 install -r requirements.txt ```
+
+## Run project
 
 ``` python3 manage.py runserver```
 
-
 To test application you can use these credits: 
 
-Login ```admin``` 
+Login ```admin``` .
 
 Password  ```admin```.
 
-Please pay attention that you cannot register by yourself - it is required that 
-only admin can add other admins to the system.
+If you wish you can register account for yourself. For this you need to run this command, fill the given form and use it.
+``` python3 manage.py createsuperuser ```
