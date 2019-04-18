@@ -23,7 +23,7 @@ class MailAdmin(admin.ModelAdmin):
     def send_mails(self, request):
         t = Template('https://docs.google.com/forms/d/e/1FAIpQLScm7Akef32OptYwfi-D-Bg06TvYBxZgM-W-pArwwFR4JLZdYw/viewform?entry.592583197=$name&entry.966480905=$surname')
 
-        faculty = list(TA.objects.all()) + list(Prof.objects.all())
+        faculty = Faculty.objects.all()
 
         for f in faculty:
             send_mail('Schedule creation', 'Hello!\nPlease fill the form for creating good schedule for you\n' 
@@ -75,7 +75,7 @@ class ScheduleAdmin(admin.ModelAdmin):
       
 
 admin.site.site_header = 'Automatically generated scheduling algorithm'
-admin.site.register(Faculty)
+admin.site.register(Faculty, MailAdmin)
 admin.site.register(Preferences, PreferencesAdmin)
 admin.site.register(Course)
 admin.site.register(Auditorium)
