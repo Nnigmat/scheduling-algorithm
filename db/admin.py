@@ -56,16 +56,27 @@ class PreferencesAdmin(admin.ModelAdmin):
                 'class time':'Preferred class time (format HH:MM)',
                 'day':'Preferred day',
                 'class per day':'Number of classes per day',
-                'class row':'Number of classes in a row',
+                'class in row':'Number of classes in a row',
         }
         records = wks.get_all_records()
         for r in records:
-            if r[fields[0]] == '':
+            if r[fields['time']] == '':
                 continue
 
             pref = Preferences()
-            for f in fields:
 
+            fac = Faculty.objects.filter(name=r[fields['name']].strip(), surname=r[fields['surname']].strip())
+            if len(fac) == 0:
+                fac = Faculty.objects.filter(email=r[fields['email']].strip())
+
+            if len(fac) == 0:
+                continue
+
+            pref.faculty = fac[0]
+            pref.preferred_class_time = r[fields['class time']]
+            pref.preferred_day = r[fields['day']]
+            pref.classes_per_day = r[fields['class per day']] 
+            pref.classes_in_row = r[fields['class in row']] 
 
             pref.save()
             print(pref)

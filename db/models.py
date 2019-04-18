@@ -67,10 +67,10 @@ class Preferences(models.Model):
     ' Preferendes model
     '''
     faculty = models.OneToOneField(Faculty, on_delete=models.CASCADE, primary_key=True)
-    preferred_class_time = models.CharField(max_length=6)
-    preferred_day = models.CharField(max_length=6)
-    classes_day = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0) ])
-    classes_row = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0) ])
+    preferred_class_time = models.CharField(max_length=8)
+    preferred_days = models.CharField(max_length=250)
+    classes_per_day = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0) ])
+    classes_in_row = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0) ])
 
 
 class Schedule(models.Model):
