@@ -48,27 +48,22 @@ class PreferencesAdmin(admin.ModelAdmin):
         gc = gspread.authorize(credentials)
         wks = gc.open('Answers').sheet1
 
-        fields = {
-                'time':'Отметка времени',
-                'email':'Адрес электронной почты',
-                'name':'Name',
-                'surname':'Surname',
-                'class time':'Preferred class time (format HH:MM)',
-                'day':'Preferred day',
-                'class per day':'Number of classes per day',
-                'class row':'Number of classes in a row',
-        }
+        fields = [
+            'Отметка времени',
+            'Адрес электронной почты',
+            'Name',
+            'Surname',
+            'Preferred class time (format HH:MM)',
+            'Preferred day',
+            'Number of classes per day',
+            'Number of classes in a row',
+        ]
+
         records = wks.get_all_records()
         for r in records:
-            if r[fields[0]] == '':
+            if r['Отметка времени'] == '':
                 continue
-
-            pref = Preferences()
-            for f in fields:
-
-
-            pref.save()
-            print(pref)
+            print(r)
 
         return HttpResponseRedirect('../')
 

@@ -26,7 +26,6 @@ class Course(models.Model):
         return f'Course: {self.name}'
 
 
-
 class AdditionalProperties(models.Model):
     max_class_in_row = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
     
@@ -37,6 +36,7 @@ class StudentGroup(models.Model):
 
     def __str__(self):
         return f'Student group: {self.year}-{self.num}'
+
 
 class TimeSlot(models.Model):
     DAY_CHOICES = (
@@ -67,6 +67,10 @@ class Preferences(models.Model):
     ' Preferendes model
     '''
     faculty = models.OneToOneField(Faculty, on_delete=models.CASCADE, primary_key=True)
+    preferred_class_time = models.CharField(max_length=6)
+    preferred_day = models.CharField(max_length=6)
+    classes_day = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0) ])
+    classes_row = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0) ])
 
 
 class Schedule(models.Model):
