@@ -48,8 +48,10 @@ class TimeSlot(models.Model):
         ('Sat', 'Saturday'),
         ('Sun', 'Sunday'),
     )
-    day = models.CharField(max_length=3, choices=DAY_CHOICES)
     begin_time = models.CharField(max_length=5)
+
+    def __str__(self):
+        return f'TimeSlot: {self.begin_time}'
 
 
 class Auditorium(models.Model):

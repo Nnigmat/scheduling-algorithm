@@ -48,6 +48,7 @@ class PreferencesAdmin(admin.ModelAdmin):
         gc = gspread.authorize(credentials)
         wks = gc.open('Answers').sheet1
 
+        Preferences.objects.all().delete()
         fields = {
                 'time':'Отметка времени',
                 'email':'Адрес электронной почты',
@@ -74,12 +75,11 @@ class PreferencesAdmin(admin.ModelAdmin):
 
             pref.faculty = fac[0]
             pref.preferred_class_time = r[fields['class time']]
-            pref.preferred_day = r[fields['day']]
+            pref.preferred_days = r[fields['day']]
             pref.classes_per_day = r[fields['class per day']] 
             pref.classes_in_row = r[fields['class in row']] 
 
             pref.save()
-            print(pref)
 
         return HttpResponseRedirect('../')
 
