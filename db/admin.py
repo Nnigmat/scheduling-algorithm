@@ -8,7 +8,7 @@ from django_version import settings
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from string import Template
-from .schedule import generate_schedule
+from ._schedule import generate_schedule
 
 class MailAdmin(admin.ModelAdmin):
     change_list_template = 'admin/db/db_changelist.html'
@@ -95,6 +95,10 @@ class ScheduleAdmin(admin.ModelAdmin):
 
     def make_schedule(self, request):
         out = generate_schedule()
+        res = ''
+        for i in out.items():
+            res += str(i)
+
         schedule = Schedule.objects.create(res=out)
         return HttpResponseRedirect('../')
 

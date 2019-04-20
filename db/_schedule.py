@@ -10,15 +10,16 @@ def generate_schedule():
     groups = dict()
     classes = dict()
 
-    slots = TimeSlot.objects.count()
+    slots = TimeSlot.objects.count() - 1
+    n_audi = Auditorium.objects.count() - 1
     for cls in Class.objects.all():
         attempt = 0
         while attempt <= 10:
-            counter += 1
+            attempt += 1
 
             # Get day and time slot
             day = randint(1, 5)
-            time = TimeSlot.objects.get(pk=randint(0, slots-1))
+            time = TimeSlot.objects.get(pk=randint(1, slots))
 
             # Check faculty and group are not busy
             if cls.teacher in faculty and (day, time) in faculty[cls.teacher]:
@@ -28,9 +29,9 @@ def generate_schedule():
 
             # Get free auditorium
             audi_attempt = 0
-            auditorium = Auditorium.objects.get(pk=randint(0, Auditorium.objects.count()))
-            while auditorium in audi and (day, time) in audi[auditorium] and audi_attempt <= Auditorium.objects.count():
-                auditorium = Auditorium.objects.get(pk=randint(0, Auditorium.objects.count()))
+            auditorium = Auditorium.objects.get(pk=randint(1, n_audi))
+            while auditorium in audi and (day, time) in audi[auditorium] and audi_attempt <= n_audi:
+                auditorium = Auditorium.objects.get(pk=randint(1, n_audi))
                 audi_attempt += 1
 
             # All auditoriums are busy

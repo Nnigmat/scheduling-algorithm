@@ -92,3 +92,6 @@ class Class(models.Model):
     teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     group = models.ForeignKey(StudentGroup, on_delete=models.CASCADE)
     time = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f'Class: {self.type} {self.teacher} {self.group}'
