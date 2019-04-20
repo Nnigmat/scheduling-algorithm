@@ -32,7 +32,7 @@ class AdditionalProperties(models.Model):
 
 class StudentGroup(models.Model):
     year = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
-    num = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(6)])
+    num = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(12)])
 
     def __str__(self):
         return f'Student group: {self.year}-{self.num}'
