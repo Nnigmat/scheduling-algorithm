@@ -95,12 +95,29 @@ class ScheduleAdmin(admin.ModelAdmin):
 
     def make_schedule(self, request):
         out = generate_schedule()
-        res = ''
-        for i in out.items():
-            res += str(i)
+
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        credentials = ServiceAccountCredentials.from_json_keyfile_name('./Trygoogle-50a92384d71a.json', scope)
+        gc = gspread.authorize(credentials)
+        wsc = self.draw_main(gc.open('Schedule'))
 
         schedule = Schedule.objects.create(res=out)
         return HttpResponseRedirect('../')
+
+    def draw_main(self, sh):
+        for sheet in sh.worksheets():
+            pass
+
+        sheet = int(sheet.title[-1])
+        title = f'Schedule{sheet+1}'
+        sh.add_worksheet(title=title, rows='100', cols=str(StudentGroup.objects.count()))
+        wsc = sh.worksheet(title)
+
+        
+
+
+        return wsc
+
 
       
 
