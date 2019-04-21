@@ -99,7 +99,16 @@ class ScheduleAdmin(admin.ModelAdmin):
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         credentials = ServiceAccountCredentials.from_json_keyfile_name('./Trygoogle-50a92384d71a.json', scope)
         gc = gspread.authorize(credentials)
-        wsc = self.draw_main(gc.open('Schedule'))
+        wsc, grps = self.draw_main(gc.open('Schedule'))
+
+        slots = list(TimeSlot.objects.order_by('begin_time'))
+        for cls, timeslot in out.items():
+            if cls.type == 'Lec':
+                pass
+            else:
+                wsc.update_cell((timeslot[0]-1)*(TimeSlot.objects.count()+1)+3+slots.index(timeslot[1]), grps.index(cls.group.__str__())+2, f'{cls.teacher}\n{cls.course.name}')
+
+        print(out)
 
         #schedule = Schedule.objects.create(res=out)
         return HttpResponseRedirect('../')
@@ -122,11 +131,13 @@ class ScheduleAdmin(admin.ModelAdmin):
             years.append(year['year'])
 
         i, year = 1, 0
+        grp = []
         while i <= StudentGroup.objects.count() and year < len(years):
             
             for gr in groups[years[year]]:
                 if gr.num != 0:
                     wsc.update_cell(1, i+1, f'{gr.year}-{gr.num}')
+                    grp.append(gr.__str__())
                     i += 1
             year += 1
         
@@ -157,7 +168,7 @@ class ScheduleAdmin(admin.ModelAdmin):
             
 
 
-        return wsc
+        return wsc, grp
 
 
       
