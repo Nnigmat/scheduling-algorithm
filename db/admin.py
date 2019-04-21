@@ -101,19 +101,60 @@ class ScheduleAdmin(admin.ModelAdmin):
         gc = gspread.authorize(credentials)
         wsc = self.draw_main(gc.open('Schedule'))
 
-        schedule = Schedule.objects.create(res=out)
+        #schedule = Schedule.objects.create(res=out)
         return HttpResponseRedirect('../')
 
     def draw_main(self, sh):
         for sheet in sh.worksheets():
             pass
 
-        sheet = int(sheet.title[-1])
+        sheet = int(sheet.title.split('Schedule')[1])
         title = f'Schedule{sheet+1}'
-        sh.add_worksheet(title=title, rows='100', cols=str(StudentGroup.objects.count()))
+        sh.add_worksheet(title=title, rows='100', cols=str(StudentGroup.objects.count()+1))
         wsc = sh.worksheet(title)
+        '''
+        wsc = sh.worksheet(f'Schedule{int(sheet.title[-1])}')
+        '''
+        groups = dict()
+        years = []
+        for year in StudentGroup.objects.order_by('year').values('year').distinct():
+            groups[year['year']] = StudentGroup.objects.filter(year=year['year'])
+            years.append(year['year'])
 
+        i, year = 1, 0
+        while i <= StudentGroup.objects.count() and year < len(years):
+            
+            for gr in groups[years[year]]:
+                if gr.num != 0:
+                    wsc.update_cell(1, i+1, f'{gr.year}-{gr.num}')
+                    i += 1
+            year += 1
         
+        cell_list = wsc.range(f'A2:A{5*(TimeSlot.objects.count()+1)+1}')
+        day, counter = 0, 0
+        day_changed = True
+        for cell in cell_list:
+            if counter % TimeSlot.objects.count() == 0 and day_changed:
+                cell.value = TimeSlot.DAY_CHOICES[day][1]
+                day += 1
+                day_changed = False
+                continue
+            else:
+                cell.value = TimeSlot.objects.order_by('begin_time')[counter % TimeSlot.objects.count()].begin_time
+                day_changed = True
+
+            counter += 1
+        wsc.update_cells(cell_list)
+
+
+
+            
+        
+        '''
+        for i in range(1, StudentGroup.objects.count()+1):
+            wsc.update_cell(2, i, 'o_0')
+        '''
+            
 
 
         return wsc
