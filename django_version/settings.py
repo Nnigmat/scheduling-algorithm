@@ -25,6 +25,9 @@ SECRET_KEY = 'vhh+5izcdovommxf9249cg*ip%q119_$7l+mr8lfl2i_2qzrv2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 STATIC_ROOT = 'static'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+)
 
 ALLOWED_HOSTS = ['damp-reaches-64872.herokuapp.com']
 
