@@ -3,7 +3,9 @@
 {% block object-tools %}
     <form action="generate_schedule/" method="POST">
         {% csrf_token %}
-        <button type="submit" class='btn'>Create Schedule</button>
+        <button type="submit" class="btn">Create Schedule</button>
+        <a href="https://docs.google.com/spreadsheets/d/1CBRTaEnqUuI574opFHJuT4bomoRncdeqE9oKaX8qRVg/edit?usp=sharing" target=_blank><input type="button" value="Schedule" /></a>
+    
     </form>
     {{ block.super }}
 {% endblock %}     

@@ -108,8 +108,6 @@ class ScheduleAdmin(admin.ModelAdmin):
             else:
                 wsc.update_cell((timeslot[0]-1)*(TimeSlot.objects.count()+1)+3+slots.index(timeslot[1]), grps.index(cls.group.__str__())+2, f'{cls.teacher}\n{cls.course.name}')
 
-        print(out)
-
         #schedule = Schedule.objects.create(res=out)
         return HttpResponseRedirect('../')
 
@@ -121,9 +119,6 @@ class ScheduleAdmin(admin.ModelAdmin):
         title = f'Schedule{sheet+1}'
         sh.add_worksheet(title=title, rows='100', cols=str(StudentGroup.objects.count()+1))
         wsc = sh.worksheet(title)
-        '''
-        wsc = sh.worksheet(f'Schedule{int(sheet.title[-1])}')
-        '''
         groups = dict()
         years = []
         for year in StudentGroup.objects.order_by('year').values('year').distinct():
@@ -156,18 +151,6 @@ class ScheduleAdmin(admin.ModelAdmin):
 
             counter += 1
         wsc.update_cells(cell_list)
-
-
-
-            
-        
-        '''
-        for i in range(1, StudentGroup.objects.count()+1):
-            wsc.update_cell(2, i, 'o_0')
-        '''
-            
-
-
         return wsc, grp
 
 
