@@ -27,7 +27,7 @@ DEBUG = True
 STATIC_ROOT = 'static'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
 ALLOWED_HOSTS = ['damp-reaches-64872.herokuapp.com']
