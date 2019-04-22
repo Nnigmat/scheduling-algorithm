@@ -25,7 +25,7 @@ SECRET_KEY = 'vhh+5izcdovommxf9249cg*ip%q119_$7l+mr8lfl2i_2qzrv2'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
