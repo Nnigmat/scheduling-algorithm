@@ -26,7 +26,7 @@ SECRET_KEY = 'vhh+5izcdovommxf9249cg*ip%q119_$7l+mr8lfl2i_2qzrv2'
 DEBUG = True
 STATIC_ROOT = '/static'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['damp-reaches-64872.herokuapp.com']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
