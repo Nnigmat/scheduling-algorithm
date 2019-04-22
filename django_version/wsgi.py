@@ -14,3 +14,6 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_version.settings')
 
 application = get_wsgi_application()
+os.sys.path.append('/home/django_projects/MyProject')
+
+os.sys.path.append('/home/django_projects/MyProject/myproject')
