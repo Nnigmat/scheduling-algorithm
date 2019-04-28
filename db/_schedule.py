@@ -1,8 +1,19 @@
 from .models import AdditionalProperties, Auditorium, Class, Course, Faculty, Preferences, TimeSlot, StudentGroup
 from random import randint
 
-def fitness():
-    pass
+def fitness(schedule):
+    fit = 0
+    prefs = Preferences.objects.all()
+    for cls in schedule:
+        prof = cls.teacher
+        time = cls.time
+        for p in prefs:
+            if p.faculty == prof:
+                if cls.time == preferred_class_time:
+                    fit += 1
+                else:
+                    fit -= 1
+        
 
 def generate_schedule():
     faculty = dict()
@@ -54,13 +65,3 @@ def generate_schedule():
             break
 
     return classes
-
-
-
-
-            
-
-
-
-
-
